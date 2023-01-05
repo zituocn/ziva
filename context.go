@@ -6,13 +6,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/tidwall/gjson"
-	"github.com/zituocn/ziva/logx"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/tidwall/gjson"
+	"github.com/zituocn/ziva/logx"
 )
 
 type CallbackFunc func(ctx *Context)
@@ -180,6 +182,16 @@ func (c *Context) ToHTML() string {
 		"&#34;", `"`,
 		"&#39;", "'",
 	).Replace(s)
+}
+
+// ToFile to file
+//	need io.Writer
+func (c *Context) ToFile(writer io.Writer) error {
+	_, err := io.Copy(writer, bytes.NewReader(c.ToByte()))
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 /*
