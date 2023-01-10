@@ -1,8 +1,11 @@
 package ziva
 
 type Options struct {
+
+	// goroutine num
 	Num int
 
+	// Queue all task
 	Queue TodoQueue
 
 	CreateQueue CreateQueue
@@ -17,7 +20,11 @@ type Options struct {
 
 	CompleteFunc CallbackFunc
 
+	// ProxyIP http or https proxy ip
 	ProxyIP string
+
+	// ProxyLib proxy ips
+	ProxyLib *ProxyLib
 
 	SheepTime int
 

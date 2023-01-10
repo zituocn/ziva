@@ -22,12 +22,15 @@ type CallbackFunc func(ctx *Context)
 type Context struct {
 	client *http.Client
 
+	// Request *http.Request
 	Request *http.Request
 
+	// Response *http.Response
 	Response *http.Response
 
 	Err error
 
+	// RespBody http.Response.Body
 	RespBody []byte
 
 	Task *Task
@@ -37,6 +40,8 @@ type Context struct {
 	execTime time.Duration
 
 	Options Options
+
+	proxyIP string
 }
 
 func (c *Context) Do() {
@@ -54,15 +59,19 @@ func (c *Context) Do() {
 	if c.Options.StartFunc != nil {
 		c.Options.StartFunc(c)
 	}
+	if c.Options.ProxyLib != nil {
+		c.SetProxyLib(c.Options.ProxyLib)
+	}
 	startTime := time.Now()
 	c.Response, c.Err = c.client.Do(c.Request)
 	if c.Err != nil {
 		if c.Options.RetryFunc != nil {
+			logx.Errorf("http request error: %s", c.Err.Error())
 			logx.Warnf("[%s] callback -> %s", "deadline", GetFuncName(c.Options.RetryFunc))
 			c.Options.RetryFunc(c)
 			return
 		} else {
-			logx.Errorf("request error :%s", c.Err.Error())
+			logx.Errorf("http request error: %s", c.Err.Error())
 			return
 		}
 	}
@@ -127,11 +136,20 @@ func (c *Context) SetProxy(httpProxy string) *Context {
 	if httpProxy == "" {
 		return c
 	}
-
 	proxy, _ := url.Parse(httpProxy)
 	transport := getDefaultTransport()
 	transport.Proxy = http.ProxyURL(proxy)
 	c.client.Transport = transport
+	c.proxyIP = httpProxy
+	return c
+}
+
+func (c *Context) SetProxyLib(lib *ProxyLib) *Context {
+	if lib == nil {
+		return c
+	}
+	ip, _ := lib.Get()
+	c.SetProxy(ip)
 	return c
 }
 
@@ -198,6 +216,9 @@ func (c *Context) ToFile(writer io.Writer) error {
 private
 */
 func (c *Context) debugPrint() {
+	if c.proxyIP != "" {
+		fmt.Printf("%s %v \n", leftText("Proxy:"), c.proxyIP)
+	}
 	fmt.Printf("%s %v \n", leftText("URL:"), c.Request.URL)
 	fmt.Printf("%s %v \n", leftText("Method:"), c.Request.Method)
 	fmt.Printf("%s %v \n", leftText("Request Header:"), c.Request.Header)

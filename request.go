@@ -108,21 +108,13 @@ func NewContext(req *http.Request, vs ...interface{}) *Context {
 			client = vv
 		case *http.Cookie:
 			req.AddCookie(vv)
-		case []Cookie:
+		case []http.Cookie:
 			for _, cookie := range vv {
-				req.AddCookie(&http.Cookie{
-					Name:     cookie.Name,
-					Value:    cookie.Value,
-					HttpOnly: cookie.HttpOnly,
-				})
+				req.AddCookie(&cookie)
 			}
-		case []*Cookie:
+		case []*http.Cookie:
 			for _, cookie := range vv {
-				req.AddCookie(&http.Cookie{
-					Name:     cookie.Name,
-					Value:    cookie.Value,
-					HttpOnly: cookie.HttpOnly,
-				})
+				req.AddCookie(cookie)
 			}
 		case FormData:
 			if len(vv) > 0 {
@@ -168,8 +160,11 @@ ziva.Cookie
 */
 
 type Cookie struct {
-	Name     string
-	Value    string
+	Name   string
+	Value  string
+	Domain string
+	Path   string
+
 	HttpOnly bool
 }
 
