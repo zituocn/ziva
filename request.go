@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"fmt"
-	"github.com/zituocn/ziva/logx"
+	"github.com/zituocn/logx"
 	"golang.org/x/net/publicsuffix"
 	"net/http"
 	"net/http/cookiejar"

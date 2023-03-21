@@ -1,7 +1,7 @@
 package ziva
 
 import (
-	"github.com/zituocn/ziva/logx"
+	"github.com/zituocn/logx"
 	"sync"
 )
 

@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/zituocn/logx"
 	"github.com/zituocn/ziva/goredis"
-	"github.com/zituocn/ziva/logx"
 )
 
 var (

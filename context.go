@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/tidwall/gjson"
-	"github.com/zituocn/ziva/logx"
+	"github.com/zituocn/logx"
 )
 
 type CallbackFunc func(ctx *Context)

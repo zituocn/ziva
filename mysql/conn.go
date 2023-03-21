@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/zituocn/ziva/logx"
+	"github.com/zituocn/logx"
 	"time"
 )
 
